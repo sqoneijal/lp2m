@@ -1,0 +1,54 @@
+[
+   {
+      "label": "Dashboard",
+      "url": "/admin/dashboard",
+      "active": "dashboard",
+      "sub": false
+   },
+   {
+      "label": "Informasi Syarat KPM",
+      "url": "/admin/syaratkpm",
+      "active": "syaratkpm",
+      "sub": false
+   },
+   {
+      "label": "Informasi",
+      "url": "/admin/informasi",
+      "active": "informasi",
+      "sub": false
+   },
+   {
+      "label": "Peserta KPM",
+      "url": "/admin/pesertakpm",
+      "active": "pesertakpm",
+      "sub": false
+   },
+   {
+      "label": "Konfigurasi Sistem",
+      "url": "#",
+      "active": "konfigurasisistem",
+      "sub": true,
+      "child": [
+         {
+            "label": "Periode",
+            "url": "/admin/konfigurasisistem/periode",
+            "active": "periode"
+         },
+         {
+            "label": "Jadwal Pendaftaran",
+            "url": "/admin/konfigurasisistem/jadwalpendaftaran",
+            "active": "jadwalpendaftaran"
+         },
+         {
+            "label": "Jenis KPM",
+            "url": "/admin/konfigurasisistem/jeniskpm",
+            "active": "jeniskpm"
+         },
+         {
+            "label": "Matakuliah",
+            "url": "/admin/konfigurasisistem/matakuliah",
+            "active": "matakuliah"
+         }
+      ]
+   }
+]

@@ -1,0 +1,27 @@
+[
+   {
+      "label": "Beranda",
+      "active": "",
+      "url": "/"
+   },
+   {
+      "label": "Daftar KPM",
+      "active": "daftar",
+      "url": "/daftar"
+   },
+   {
+      "label": "Cek Status Pendaftaran KPM",
+      "active": "cekstatuspendaftaran",
+      "url": "/cekstatuspendaftaran"
+   },
+   {
+      "label": "Cetak Biodata KPM",
+      "active": "cetakbiodata",
+      "url": "/cetakbiodata"
+   },
+   {
+      "label": "Daftar Matakuliah KPM",
+      "active": "daftarmatkulkpm",
+      "url": "/daftarmatkulkpm"
+   }
+]
