@@ -122,7 +122,7 @@ class Daftar extends Model
          join tb_mst_rentang_nilai tmrn2 on tmrn2.huruf = tkk2.nilai_huruf
          where tkk2.nim = \'' . trim($post['nim']) . '\'
          group by tkk2.nim) tkk', 'tkk.nim = tm.nim', 'left');
-         $table->where('tm.status_perkuliahan', '1');
+         // $table->where('tm.status_perkuliahan', '1');
          // $table->where('tk.thn_ajaran', $post['tahun_ajaran']);
          // $table->where('tk.id_semester', $post['id_semester']);
          $table->where('tm.nim', trim($post['nim']));

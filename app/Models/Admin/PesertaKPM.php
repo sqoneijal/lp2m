@@ -153,8 +153,7 @@ class PesertaKPM extends Model
    private function _queryData($post = [])
    {
       $table = $this->db->table('tb_peserta_kpm tpk');
-      $table->select('tpk.id, tpk.nim, tm.nama, tpk.ipk, tm.ta_masuk as angkatan, concat(tsj.nama_jenjangprodi, \' \', tmp.nama_prodi)
-      as nama_prodi, tmf.nama_fakultas, tpk.tahun_ajaran, tpk.id_semester, tmjk.nama as nama_jenis_kpm, tpk.total_sks');
+      $table->select('tpk.id, tpk.nim, tm.nama, tpk.ipk, tm.ta_masuk as angkatan, concat(tsj.nama_jenjangprodi, \' \', tmp.nama_prodi) as nama_prodi, tmf.nama_fakultas, tpk.tahun_ajaran, tpk.id_semester, tmjk.nama as nama_jenis_kpm, tpk.total_sks, tpk.krs_aktif');
       $table->join('tbl_mahasiswa tm', 'tm.nim = tpk.nim');
       $table->join('tbl_mst_prodi tmp', 'tmp.id_prodi = tm.id_prodi');
       $table->join('tbl_sys_jenjangprodi tsj', 'tsj.id_jenjangprodi = tmp.kode_jenjang');
@@ -183,7 +182,7 @@ class PesertaKPM extends Model
          $i++;
       }
 
-      $column_order = ['nim', 'nama', 'nama_jenis_kpm', 'total_sks', 'ipk', 'angkatan', 'nama_prodi', 'nama_fakultas'];
+      $column_order = ['nim', 'nama', 'nama_jenis_kpm', 'total_sks', 'ipk', 'angkatan', 'nama_prodi', 'nama_fakultas', null];
       $column = @$_POST['order'][0]['column'];
       $dir = @$_POST['order'][0]['dir'];
       $table->orderBy($column_order[$column], $dir);

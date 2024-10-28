@@ -9,9 +9,13 @@ class Daftar
    {
       return [
          'id_jenis_kpm' => [
-            'rules' => 'required|numeric|checkJumlahSKSLulus[total_sks]',
+            'rules' => 'required|numeric',
             'label' => 'Jenis KPM'
          ],
+         // 'id_jenis_kpm' => [
+         //    'rules' => 'required|numeric|checkJumlahSKSLulus[total_sks]',
+         //    'label' => 'Jenis KPM'
+         // ],
          // 'nim' => [
          //    'rules' => 'required|numeric|is_not_unique[tbl_mahasiswa.nim,nim]|apakahAdaAmbilMatkulKPM[tahun_ajaran,id_semester]',
          //    'label' => 'NIM',
@@ -20,7 +24,7 @@ class Daftar
          //    ],
          // ],
          'nim' => [
-            'rules' => 'required|numeric|is_not_unique[tbl_mahasiswa.nim,nim]',
+            'rules' => 'required|numeric',
             'label' => 'NIM',
             'errors' => [
                'is_not_unique' => 'NIM yang anda masukkan tidak ditemukan di SIAKAD'

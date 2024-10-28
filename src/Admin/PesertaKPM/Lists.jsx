@@ -1,8 +1,8 @@
+import moment from "moment";
 import React, { Suspense, useEffect, useState } from "react";
 import { Card, Table } from "react-bootstrap";
-import { initDatatable, notification, confirmDelete, post, error_code_http, statusPerkawinan, jekel, handleFilterDatatable } from "Root/Helpers";
+import { confirmDelete, error_code_http, handleFilterDatatable, initDatatable, jekel, notification, post, statusPerkawinan } from "Root/Helpers";
 import writeXlsxFile from "write-excel-file";
-import moment from "moment";
 
 const Breadcrumbs = React.lazy(() => import("Admin/Breadcrumbs"));
 const DatatableFilter = React.lazy(() => import("./DatatableFilter"));
@@ -59,6 +59,13 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
             { data: "angkatan", class: "text-center" },
             { data: "nama_prodi" },
             { data: "nama_fakultas" },
+            {
+               data: null,
+               orederable: false,
+               render: (data) => {
+                  return `<a href="https://drive.google.com/file/d/${data.krs_aktif}/view?usp=drive_link" target="_blank">krs</a>`;
+               },
+            },
             { data: null },
          ],
          columnDefs: true,
@@ -204,6 +211,7 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
                         <th>angkatan</th>
                         <th>prodi</th>
                         <th>fakultas</th>
+                        <th />
                         <th />
                      </tr>
                   </thead>
