@@ -4,3 +4,4 @@ app/Config/Database.php
 vendor
 writable
 public/bundle
+sites.xml
