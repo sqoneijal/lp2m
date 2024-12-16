@@ -11,7 +11,7 @@ abstract class BaseController extends Controller
 {
 
    protected $request;
-   protected $helpers = ['style', 'autoload'];
+   protected $helpers = ['style', 'autoload', 'text'];
    protected $post;
    protected $getVar;
 

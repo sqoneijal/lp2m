@@ -2,17 +2,13 @@
 
 namespace App\Models\Front;
 
-use CodeIgniter\Model;
+use App\Models\Common;
 
-class Home extends Model {
+class Home extends Common
+{
 
-   protected $db;
-
-   public function __construct() {
-      $this->db = \Config\Database::connect();
-   }
-
-   public function getInformasiTerbaru() {
+   public function getInformasiTerbaru()
+   {
       try {
          $table = $this->db->table('tb_informasi_kpm');
          $table->select('id, judul, content');
@@ -22,7 +18,7 @@ class Home extends Model {
          $get = $table->get();
          $result = $get->getResultArray();
          $fieldNames = $get->getFieldNames();
-         
+
          $response = [];
          foreach ($result as $key => $val) {
             foreach ($fieldNames as $field) {
@@ -38,5 +34,4 @@ class Home extends Model {
          die($e->getMessage());
       }
    }
-
 }
