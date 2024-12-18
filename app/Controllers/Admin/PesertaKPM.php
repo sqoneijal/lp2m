@@ -2,21 +2,16 @@
 
 namespace App\Controllers\Admin;
 
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 use App\Models\Common;
 use App\Controllers\Admin as Controller;
 use App\Models\Admin\PesertaKPM as Model;
 use App\Validation\Admin\PesertaKPM as Validate;
 
-class PesertaKPM extends Controller {
+class PesertaKPM extends Controller
+{
 
-   public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
-      parent::initController($request, $response, $logger);
-   }
-
-   public function index() {
+   public function index()
+   {
       $common = new Common();
 
       $this->data = [
@@ -31,36 +26,48 @@ class PesertaKPM extends Controller {
       $this->template($this->data);
    }
 
-   public function getDropdownList() {
+   public function bolehIkutKPM(): object
+   {
+      $model = new Model();
+      $content = $model->bolehIkutKPM($this->post);
+      return $this->response->setJSON($content);
+   }
+
+   public function getDropdownList()
+   {
       $common = new Common();
       $content = [
          'daftarJenisKPM' => $common->getDaftarJenisKPM(),
          'daftarFakultas' => $common->getDaftarFakultas(),
          'daftarProdi' => $common->getDaftarProdi(),
+         'daftarPeriode' => $common->getDaftarPeriode()
       ];
       return $this->response->setJSON($content);
    }
 
-   public function downloadExcel() {
+   public function downloadExcel()
+   {
       $model = new Model();
       $content = $model->downloadExcel($this->post);
       return $this->response->setJSON($content);
    }
 
-   public function getDetailBiodata() {
+   public function getDetailBiodata()
+   {
       $model = new Model();
       $content = $model->cariPesertaKPM($this->post);
       return $this->response->setJSON($content);
    }
 
-   public function hapus() {
+   public function hapus()
+   {
       $response = ['status' => false, 'errors' => [], 'msg_response' => 'Terjadi sesuatu kesalahan.'];
-      
+
       $validation = new Validate();
       if ($this->validate($validation->hapus())) {
          $model = new Model();
          $model->hapus($this->post);
-      
+
          $response['status'] = true;
          $response['msg_response'] = 'Data berhasil dihapus.';
       } else {
@@ -72,12 +79,11 @@ class PesertaKPM extends Controller {
       return $this->response->setJSON($response);
    }
 
-   public function getData() {
+   public function getData()
+   {
       $model = new Model();
       $query = $model->getData($this->getVar);
-   
-      $i = $this->post['start'];
-   
+
       $output = array(
          'draw'            => intval(@$this->post['draw']),
          'recordsTotal'    => intval($model->countData($this->getVar)),
@@ -86,5 +92,4 @@ class PesertaKPM extends Controller {
       );
       return $this->response->setJSON($output);
    }
-
 }

@@ -9,7 +9,8 @@ use Psr\Log\LoggerInterface;
 class Admin extends BaseController
 {
 
-   protected $env = 'development';
+   protected $env = 'production';
+   public $data;
 
    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
    {
@@ -61,8 +62,6 @@ class Admin extends BaseController
    public function setUserLogin()
    {
       $session = \Config\Services::session();
-      $body = $session->get();
-
-      return $body;
+      return $session->get();
    }
 }

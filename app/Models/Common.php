@@ -153,12 +153,35 @@ class Common extends Model
          $response = [];
          if (isset($data)) {
             foreach ($fieldNames as $field) {
-               $response[$field] = trim($data[$field]);
+               if ($data[$field]) {
+                  $response[$field] = trim($data[$field]);
+               } else {
+                  $response[$field] = null;
+               }
             }
          }
          return $response;
       } catch (\Exception $e) {
          die($e->getMessage());
       }
+   }
+
+   public function getDaftarPeriode()
+   {
+      $table = $this->db->table('tb_periode_kpm');
+      $table->orderBy('concat(tahun_ajaran, id_semester) desc');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
    }
 }

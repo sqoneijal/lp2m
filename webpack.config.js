@@ -24,9 +24,11 @@ const build = {
 };
 
 module.exports = (env) => {
+   const isDevelopment = env.NODE_ENV === "development";
+
    return {
       plugins: [
-         new TerserPlugin(),
+         ...(isDevelopment ? [] : [new TerserPlugin()]),
          new CleanWebpackPlugin(),
          new webpack.ProgressPlugin(),
          new webpack.HotModuleReplacementPlugin(),
@@ -52,6 +54,13 @@ module.exports = (env) => {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
             "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+         },
+         watchFiles: {
+            paths: ["src/**/*"], // Pantau semua file di dalam folder src
+            options: {
+               poll: 1000, // Periksa perubahan setiap 1 detik
+               aggregateTimeout: 300, // Tunda rebuild selama 300ms setelah perubahan terakhir
+            },
          },
       },
       resolve: {

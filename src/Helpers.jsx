@@ -1,5 +1,5 @@
-import React from "react";
 import axios from "axios";
+import React from "react";
 import { Form } from "react-bootstrap";
 
 export const post = async (url, form = [], config = {}) => {
@@ -190,6 +190,7 @@ const DatatableServerSide = ({ ...content }) => {
             if (content.show_delete_button)
                button_render +=
                   '<a href="#" id="delete" class="btn btn-active-icon-danger btn-active-text-danger btn-sm p-0 m-0"><i class="fas fa-solid fa-trash"></i></a>';
+            if (content.custom_button) button_render += content.custom_button;
 
             return button_render;
          },
@@ -334,4 +335,8 @@ export const render_keterampilan_khusus = (content) => {
       return "-";
    }
    return "-";
+};
+
+export const objLength = (content = {}) => {
+   return Object.keys(content).length > 0;
 };

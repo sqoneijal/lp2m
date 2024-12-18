@@ -2,27 +2,23 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 use App\Validation\Login as Validate;
 
-class Login extends BaseController {
+class Login extends BaseController
+{
 
    protected $env = 'production';
 
-   public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
-      parent::initController($request, $response, $logger);
-   }
-
-   public function index() {
+   public function index()
+   {
       $data['title'] = 'Login';
       $data['webpack_js'] = $this->generateWebpackJS();
 
       return view('Login', $data);
    }
 
-   protected function generateWebpackJS() {
+   protected function generateWebpackJS()
+   {
       if ($this->env === 'development') {
          $script_tag[] = 'http://localhost:8081/runtime.js';
          $script_tag[] = 'http://localhost:8081/content.js';
@@ -38,9 +34,10 @@ class Login extends BaseController {
       return script_tag($script_tag);
    }
 
-   public function submit() {
+   public function submit()
+   {
       $response = ['status' => false, 'errors' => [], 'msg_response' => 'Terjadi sesuatu kesalahan.'];
-      
+
       $validation = new Validate();
       if ($this->validate($validation->submit())) {
          $session = \Config\Services::session();
@@ -56,11 +53,11 @@ class Login extends BaseController {
       return $this->response->setJSON($response);
    }
 
-   public function logout() {
+   public function logout()
+   {
       $session = \Config\Services::session();
 
       $session->destroy();
       return redirect()->to('/');
    }
-
 }

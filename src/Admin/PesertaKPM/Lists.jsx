@@ -1,7 +1,18 @@
 import moment from "moment";
 import React, { Suspense, useEffect, useState } from "react";
 import { Card, Table } from "react-bootstrap";
-import { confirmDelete, error_code_http, handleFilterDatatable, initDatatable, jekel, notification, post, statusPerkawinan } from "Root/Helpers";
+import {
+   confirmDelete,
+   error_code_http,
+   handleFilterDatatable,
+   initDatatable,
+   jekel,
+   notification,
+   objLength,
+   post,
+   serialize,
+   statusPerkawinan,
+} from "Root/Helpers";
 import writeXlsxFile from "write-excel-file";
 
 const Breadcrumbs = React.lazy(() => import("Admin/Breadcrumbs"));
@@ -10,17 +21,28 @@ const DatatableFilter = React.lazy(() => import("./DatatableFilter"));
 const { periode } = content;
 
 let datatable;
-let datatable_url = "/getdata";
+const datatable_url = `/getdata`;
 
-const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftarFakultas, daftarProdi }) => {
+const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftarFakultas, daftarProdi, daftarPeriode }) => {
    // bool
    const [isLoading, setIsLoading] = useState(false);
    const [applyFilter, setApplyFilter] = useState(false);
 
    // object
-   const [filter, setFilter] = useState({});
+   const [filter, setFilter] = useState({
+      periode: `${periode.tahun_ajaran}${periode.id_semester}`,
+   });
 
-   const propsDatatableFilter = { isLoadingDropdownList, daftarJenisKPM, daftarFakultas, daftarProdi, setApplyFilter, filter, setFilter };
+   const propsDatatableFilter = {
+      isLoadingDropdownList,
+      daftarJenisKPM,
+      daftarFakultas,
+      daftarProdi,
+      setApplyFilter,
+      filter,
+      setFilter,
+      daftarPeriode,
+   };
 
    useEffect(() => {
       if (applyFilter && Object.keys(filter).length > 0) {
@@ -32,70 +54,109 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
       return () => {};
    }, [applyFilter, filter]);
 
-   useEffect(() => {
-      datatable = initDatatable({
-         show_edit_button: false,
-         show_delete_button: true,
-         url: datatable_url,
-         columns: [
-            {
-               data: null,
-               render: (data) => {
-                  const nim = document.getElementById(data.nim);
-                  if (nim) {
-                     nim.onclick = (e) => {
-                        e.preventDefault();
-                        setDetailContent(data);
-                     };
-                  }
+   const handleBolehKPM = (nim, tahun_ajaran, id_semester) => {
+      Swal.fire({
+         text: "Apakah anda yakin ingin menyetujui peserta ini?",
+         icon: "info",
+         showCancelButton: true,
+         buttonsStyling: false,
+         confirmButtonText: "Iya!",
+         cancelButtonText: "Tidak",
+         customClass: {
+            confirmButton: "btn fw-bold btn-active-light-primary",
+            cancelButton: "btn fw-bold btn-active-light-danger",
+         },
+      }).then((res) => {
+         if (res.isConfirmed) {
+            const formData = { nim, periode: `${tahun_ajaran}${id_semester}` };
 
-                  return `<a href="#" id="${data.nim}">${data.nim}</a>`;
-               },
-            },
-            { data: "nama" },
-            { data: "nama_jenis_kpm" },
-            { data: "total_sks", class: "text-center" },
-            { data: "ipk", class: "text-center" },
-            { data: "angkatan", class: "text-center" },
-            { data: "nama_prodi" },
-            { data: "nama_fakultas" },
-            {
-               data: null,
-               orederable: false,
-               render: (data) => {
-                  return `<a href="https://drive.google.com/file/d/${data.krs_aktif}/view?usp=drive_link" target="_blank">krs</a>`;
-               },
-            },
-            { data: null },
-         ],
-         columnDefs: true,
-         createdRow: (row, data) => {
-            const _delete = row.querySelector("#delete");
-            if (_delete) {
-               _delete.onclick = (e) => {
-                  e.preventDefault();
-                  const _delete = confirmDelete({
-                     url: "/hapus",
-                     id: data.id,
-                  });
-                  _delete.then((res) => {
-                     const { data } = res;
-                     notification(data.status, data.msg_response);
-                     if (data.status) {
-                        datatable.reload();
-                     }
-                  });
-               };
-            }
-         },
-         where: {
-            tahun_ajaran: periode.tahun_ajaran,
-            id_semester: periode.id_semester,
-         },
+            const fetch = post(`/bolehikutkpm`, formData);
+            fetch.then((res) => {
+               if (typeof res === "undefined") return;
+
+               const { data } = res;
+               notification(data.status, data.msg_response);
+
+               if (data.status) datatable.reload();
+            });
+         }
       });
-      datatable.init();
+   };
+
+   useEffect(() => {
+      if (objLength(filter)) {
+         datatable = initDatatable({
+            show_edit_button: false,
+            show_delete_button: true,
+            url: `${datatable_url}?${serialize(filter)}`,
+            columns: [
+               {
+                  data: null,
+                  render: (data) => {
+                     const nim = document.getElementById(data.nim);
+                     if (nim) {
+                        nim.onclick = (e) => {
+                           e.preventDefault();
+                           setDetailContent(data);
+                        };
+                     }
+
+                     return `<a href="#" id="${data.nim}">${data.nim}</a>`;
+                  },
+               },
+               { data: "nama" },
+               { data: "nama_jenis_kpm" },
+               { data: "total_sks", class: "text-center" },
+               { data: "ipk", class: "text-center" },
+               { data: "angkatan", class: "text-center" },
+               { data: "nama_prodi" },
+               { data: "nama_fakultas" },
+               {
+                  data: null,
+                  orederable: false,
+                  render: (data) => {
+                     return `<a href="https://drive.google.com/file/d/${data.krs_aktif}/view?usp=drive_link" target="_blank">krs</a>`;
+                  },
+               },
+               { data: null },
+            ],
+            columnDefs: true,
+            createdRow: (row, data) => {
+               const _delete = row.querySelector("#delete");
+               if (_delete) {
+                  _delete.onclick = (e) => {
+                     e.preventDefault();
+                     const _delete = confirmDelete({
+                        url: "/hapus",
+                        id: data.id,
+                     });
+                     _delete.then((res) => {
+                        if (typeof res === "undefined") {
+                           return;
+                        }
+                        const { data } = res;
+                        notification(data.status, data.msg_response);
+                        if (data.status) {
+                           datatable.reload();
+                        }
+                     });
+                  };
+               }
+
+               const _check = row.querySelector("#check");
+               if (_check) {
+                  _check.onclick = (e) => {
+                     e.preventDefault();
+                     handleBolehKPM(data.nim, data.tahun_ajaran, data.id_semester);
+                  };
+               }
+            },
+            custom_button: `<a href="#" id="check" class="btn btn-active-icon-success btn-active-text-success btn-sm p-0 m-0"><i class="fas fa-solid fa-check"></i></a>`,
+         });
+         datatable.init();
+      }
       return () => {};
-   }, []);
+   }, [filter]);
 
    const downloadExcel = (e) => {
       e.preventDefault();
@@ -163,8 +224,8 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
                   "ALAMAT ORANG TUA",
                ];
 
-               let HEADER_ROW = [];
-               array_header.map((row) => {
+               const HEADER_ROW = [];
+               array_header.forEach((row) => {
                   HEADER_ROW.push({
                      value: row,
                      fontWeight: "bold",

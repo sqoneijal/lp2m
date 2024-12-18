@@ -2,20 +2,15 @@
 
 namespace App\Controllers\Admin;
 
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 use App\Models\Common;
-use App\Controllers\Admin as Controller;
+use App\Controllers\Admin;
 use App\Models\Admin\Dashboard as Model;
 
-class Dashboard extends Controller {
+class Dashboard extends Admin
+{
 
-   public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
-      parent::initController($request, $response, $logger);
-   }
-
-   public function index() {
+   public function index()
+   {
       $common = new Common();
 
       $this->data = [
@@ -28,12 +23,12 @@ class Dashboard extends Controller {
       $this->template($this->data);
    }
 
-   public function getStatistik() {
+   public function getStatistik()
+   {
       $model = new Model();
       $content = [
          'jumlahPesertaKPM' => $model->hitungJumlahPesertaBerdasarkanJenis($this->getVar)
       ];
       return $this->response->setJSON($content);
    }
-
 }

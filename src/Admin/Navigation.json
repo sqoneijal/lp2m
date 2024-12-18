@@ -24,6 +24,12 @@
       "sub": false
    },
    {
+      "label": "Ikut KPM",
+      "url": "/admin/ikutkpm",
+      "active": "ikutkpm",
+      "sub": false
+   },
+   {
       "label": "Konfigurasi Sistem",
       "url": "#",
       "active": "konfigurasisistem",

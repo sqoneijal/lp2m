@@ -8,7 +8,7 @@ $routes = Services::routes();
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
 if (is_file(SYSTEMPATH . 'Config/Routes.php')) {
-    require SYSTEMPATH . 'Config/Routes.php';
+   require SYSTEMPATH . 'Config/Routes.php';
 }
 
 /*
@@ -41,13 +41,13 @@ $routes->get('getinformasiterbaru', 'Home::getInformasiTerbaru');
 $routes->get('informasi/(:num)', 'Informasi::index/$1');
 $routes->get('informasi/(:num)/detail', 'Informasi::detail/$1');
 
-$routes->group('cekstatuspendaftaran', function($routes) {
+$routes->group('cekstatuspendaftaran', function ($routes) {
    $routes->get('/', 'CekStatusPendaftaran::index');
 
    $routes->post('submit', 'CekStatusPendaftaran::submit');
 });
 
-$routes->group('cetakbiodata', function($routes) {
+$routes->group('cetakbiodata', function ($routes) {
    $routes->get('/', 'CetakBiodata::index');
    $routes->get('(:num)', 'CetakBiodata::cetak/$1');
    $routes->get('getdropdownlist', 'CetakBiodata::getDropdownList');
@@ -55,7 +55,7 @@ $routes->group('cetakbiodata', function($routes) {
    $routes->post('caripesertakpm', 'CetakBiodata::cariPesertaKPM');
 });
 
-$routes->group('daftar', function($routes) {
+$routes->group('daftar', function ($routes) {
    $routes->get('/', 'Daftar::index');
    $routes->get('getdropdownlist', 'Daftar::getDropdownList');
 
@@ -63,33 +63,47 @@ $routes->group('daftar', function($routes) {
    $routes->post('carimahasiswa', 'Daftar::cariMahasiswa');
 });
 
-$routes->group('daftarmatkulkpm', function($routes) {
+$routes->group('daftarmatkulkpm', function ($routes) {
    $routes->get('/', 'DaftarMatkulKPM::index');
 
    $routes->post('getdata', 'DaftarMatkulKPM::getData');
 });
 
-$routes->group('login', function($routes) {
+$routes->group('login', function ($routes) {
    $routes->get('/', '\App\Controllers\Login::index');
    $routes->get('logout', '\App\Controllers\Login::logout');
 
    $routes->post('submit', '\App\Controllers\Login::submit');
 });
 
-$routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($routes) {
-	$routes->group('dashboard', function($routes) {
-		$routes->get('/', 'Dashboard::index');
-		$routes->get('getstatistik', 'Dashboard::getStatistik');
-	});
+function adminIkutKPM($routes): void
+{
+   $routes->group('ikutkpm', function ($routes) {
+      $routes->get('/', 'IkutKPM::index');
+      $routes->get('getdropdownlist', 'IkutKPM::getDropdownList');
 
-   $routes->group('syaratkpm', function($routes) {
+      $routes->post('getdata', 'IkutKPM::getData');
+      $routes->post('getdetailbiodata', 'IkutKPM::getDetailBiodata');
+      $routes->post('downloadexcel', 'IkutKPM::downloadExcel');
+   });
+}
+
+$routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function ($routes) {
+   adminIkutKPM($routes);
+
+   $routes->group('dashboard', function ($routes) {
+      $routes->get('/', 'Dashboard::index');
+      $routes->get('getstatistik', 'Dashboard::getStatistik');
+   });
+
+   $routes->group('syaratkpm', function ($routes) {
       $routes->get('/', 'SyaratKPM::index');
       $routes->get('getcontent', 'SyaratKPM::getContent');
 
       $routes->post('submit', 'SyaratKPM::submit');
    });
 
-   $routes->group('informasi', function($routes) {
+   $routes->group('informasi', function ($routes) {
       $routes->get('/', 'Informasi::index');
 
       $routes->post('submit', 'Informasi::submit');
@@ -97,7 +111,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
       $routes->post('hapus', 'Informasi::hapus');
    });
 
-   $routes->group('pesertakpm', function($routes) {
+   $routes->group('pesertakpm', function ($routes) {
       $routes->get('/', 'PesertaKPM::index');
       $routes->get('getdropdownlist', 'PesertaKPM::getDropdownList');
 
@@ -105,10 +119,11 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
       $routes->post('hapus', 'PesertaKPM::hapus');
       $routes->post('getdetailbiodata', 'PesertaKPM::getDetailBiodata');
       $routes->post('downloadexcel', 'PesertaKPM::downloadExcel');
+      $routes->post('bolehikutkpm', 'PesertaKPM::bolehIkutKPM');
    });
 
-   $routes->group('konfigurasisistem', ['namespace' => 'App\Controllers\Admin\KonfigurasiSistem'], function($routes) {
-      $routes->group('periode', function($routes) {
+   $routes->group('konfigurasisistem', ['namespace' => 'App\Controllers\Admin\KonfigurasiSistem'], function ($routes) {
+      $routes->group('periode', function ($routes) {
          $routes->get('/', 'Periode::index');
          $routes->get('handletutupperiodeaktif', 'Periode::handleTutupPeriodeAktif');
 
@@ -117,7 +132,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
          $routes->post('hapus', 'Periode::hapus');
       });
 
-      $routes->group('jadwalpendaftaran', function($routes) {
+      $routes->group('jadwalpendaftaran', function ($routes) {
          $routes->get('/', 'JadwalPendaftaran::index');
          $routes->get('getdropdownlist', 'JadwalPendaftaran::getDropdownList');
 
@@ -126,15 +141,15 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
          $routes->post('hapus', 'JadwalPendaftaran::hapus');
       });
 
-      $routes->group('jeniskpm', function($routes) {
+      $routes->group('jeniskpm', function ($routes) {
          $routes->get('/', 'JenisKPM::index');
-         
+
          $routes->post('submit', 'JenisKPM::submit');
          $routes->post('getdata', 'JenisKPM::getData');
          $routes->post('hapus', 'JenisKPM::hapus');
       });
 
-      $routes->group('matakuliah', function($routes) {
+      $routes->group('matakuliah', function ($routes) {
          $routes->get('/', 'Matakuliah::index');
 
          $routes->post('submit', 'Matakuliah::submit');
@@ -159,5 +174,5 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
  * needing to reload it.
  */
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
-    require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
+   require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }

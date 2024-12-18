@@ -2,16 +2,24 @@
 
 namespace App\Models\Admin;
 
-use CodeIgniter\Model;
+use App\Models\Common;
 
-class PesertaKPM extends Model
+class PesertaKPM extends Common
 {
 
-   protected $db;
-
-   public function __construct()
+   public function bolehIkutKPM(array $post): array
    {
-      $this->db = \Config\Database::connect();
+      try {
+         $table = $this->db->table('tb_peserta_kpm');
+         $table->where('nim', $post['nim']);
+         $table->where('concat(tahun_ajaran, id_semester)', $post['periode']);
+         $table->update([
+            'boleh_ikut_kpm' => 't'
+         ]);
+         return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
    }
 
    public function downloadExcel($post = [])
@@ -106,8 +114,9 @@ class PesertaKPM extends Model
    {
       try {
          $table = $this->_queryData($post);
-         if ($post['length'] !== -1)
+         if ($post['length'] !== -1) {
             $table->limit($post['length'], $post['start']);
+         }
 
          $get = $table->get();
          $result = $get->getResultArray();
@@ -133,14 +142,10 @@ class PesertaKPM extends Model
       $table->join('tbl_mst_prodi tmp', 'tmp.id_prodi = tm.id_prodi');
       $table->join('tbl_sys_jenjangprodi tsj', 'tsj.id_jenjangprodi = tmp.kode_jenjang');
       $table->join('tbl_mst_fakultas tmf', 'tmf.id_fakultas = tmp.id_fakultas');
-      $table->where('tpk.tahun_ajaran', $post['tahun_ajaran']);
-      $table->where('tpk.id_semester', $post['id_semester']);
+      $table->where('tpk.boleh_ikut_kpm', 'f');
+      $table->where('concat(tpk.tahun_ajaran, tpk.id_semester)', $post['periode']);
 
-      $get = $table->get();
-      $data = $get->getRowArray();
-
-      if (isset($data)) return $data['jumlah'];
-      return 0;
+      return $table->countAllResults();
    }
 
    public function filteredData($post = [])
@@ -159,11 +164,17 @@ class PesertaKPM extends Model
       $table->join('tbl_sys_jenjangprodi tsj', 'tsj.id_jenjangprodi = tmp.kode_jenjang');
       $table->join('tbl_mst_fakultas tmf', 'tmf.id_fakultas = tmp.id_fakultas');
       $table->join('tb_mst_jenis_kpm tmjk', 'tmjk.id = tpk.id_jenis_kpm');
-      $table->where('tpk.tahun_ajaran', $post['tahun_ajaran']);
-      $table->where('tpk.id_semester', $post['id_semester']);
-      if (@$post['id_fakultas']) $table->where('tmp.id_fakultas', $post['id_fakultas']);
-      if (@$post['id_prodi']) $table->where('tmp.id_prodi', $post['id_prodi']);
-      if (@$post['id_jenis_kpm']) $table->where('tpk.id_jenis_kpm', $post['id_jenis_kpm']);
+      $table->where('tpk.boleh_ikut_kpm', 'f');
+      $table->where('concat(tpk.tahun_ajaran, tpk.id_semester)', $post['periode']);
+      if (@$post['id_fakultas']) {
+         $table->where('tmp.id_fakultas', $post['id_fakultas']);
+      }
+      if (@$post['id_prodi']) {
+         $table->where('tmp.id_prodi', $post['id_prodi']);
+      }
+      if (@$post['id_jenis_kpm']) {
+         $table->where('tpk.id_jenis_kpm', $post['id_jenis_kpm']);
+      }
 
       $i = 0;
       $column_search = ['tpk.nim', 'tm.nama', 'tmp.nama_prodi', 'tmf.nama_fakultas', 'tmjk.nama'];
@@ -176,8 +187,9 @@ class PesertaKPM extends Model
                $table->orLike($item, trim(strtolower($_POST['search']['value'])));
             }
 
-            if (count($column_search) - 1 === $i)
+            if (count($column_search) - 1 === $i) {
                $table->groupEnd();
+            }
          }
          $i++;
       }

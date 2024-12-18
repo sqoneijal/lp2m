@@ -1,5 +1,5 @@
-import React, { Suspense, useState, useEffect } from "react";
-import { get, notification, error_code_http } from "Root/Helpers";
+import React, { Suspense, useEffect, useState } from "react";
+import { error_code_http, get, notification } from "Root/Helpers";
 
 const Detail = React.lazy(() => import("./Detail"));
 const Lists = React.lazy(() => import("./Lists"));
@@ -15,9 +15,10 @@ const Context = () => {
    const [daftarJenisKPM, setDaftarJenisKPM] = useState([]);
    const [daftarFakultas, setDaftarFakultas] = useState([]);
    const [daftarProdi, setDaftarProdi] = useState([]);
+   const [daftarPeriode, setDaftarPeriode] = useState([]);
 
    const propsDetail = { detailContent, setDetailContent };
-   const propsLists = { setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftarFakultas, daftarProdi };
+   const propsLists = { setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftarFakultas, daftarProdi, daftarPeriode };
 
    const getDropdownList = () => {
       setIsLoadingDropdownList(true);
@@ -27,6 +28,7 @@ const Context = () => {
             setDaftarJenisKPM(data.daftarJenisKPM);
             setDaftarFakultas(data.daftarFakultas);
             setDaftarProdi(data.daftarProdi);
+            setDaftarPeriode(data.daftarPeriode);
          })
          .catch((e) => {
             notification(false, error_code_http(e.response.status));
@@ -42,17 +44,9 @@ const Context = () => {
    }, []);
 
    return (
-      <React.Fragment>
-         <Suspense fallback={<div>Loading...</div>}>
-            {(() => {
-               if (Object.keys(detailContent).length > 0) {
-                  return <Detail {...propsDetail} />;
-               } else {
-                  return <Lists {...propsLists} />;
-               }
-            })()}
-         </Suspense>
-      </React.Fragment>
+      <Suspense fallback={<div>Loading...</div>}>
+         {Object.keys(detailContent).length > 0 ? <Detail {...propsDetail} /> : <Lists {...propsLists} />}
+      </Suspense>
    );
 };
 export default Context;

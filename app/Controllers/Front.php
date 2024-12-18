@@ -2,21 +2,10 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
-
 class Front extends BaseController
 {
 
    protected $env = 'production';
-
-   public $data;
-
-   public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-   {
-      parent::initController($request, $response, $logger);
-   }
 
    public function template($content = [])
    {
