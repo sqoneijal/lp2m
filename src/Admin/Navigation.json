@@ -30,6 +30,12 @@
       "sub": false
    },
    {
+      "label": "Nilai",
+      "url": "/admin/nilai",
+      "active": "nilai",
+      "sub": false
+   },
+   {
       "label": "Konfigurasi Sistem",
       "url": "#",
       "active": "konfigurasisistem",

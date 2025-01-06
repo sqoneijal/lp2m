@@ -24,6 +24,13 @@ class IkutKPM extends Admin
       $this->template($this->data);
    }
 
+   public function hapus(): object
+   {
+      $model = new Model();
+      $content = $model->hapus($this->post);
+      return $this->response->setJSON($content);
+   }
+
    public function downloadExcel()
    {
       $model = new Model();

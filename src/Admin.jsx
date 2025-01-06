@@ -16,6 +16,7 @@ const KonfigurasiSistemMatakuliah = React.lazy(() => import("Admin/KonfigurasiSi
 const Informasi = React.lazy(() => import("Admin/Informasi/Context"));
 const PesertaKPM = React.lazy(() => import("Admin/PesertaKPM/Context"));
 const IkutKPM = React.lazy(() => import("Admin/IkutKPM/Context"));
+const Nilai = React.lazy(() => import("Admin/Nilai/Context"));
 
 const Admin = () => {
    // array
@@ -58,6 +59,7 @@ const Admin = () => {
                            <Route path="informasi" element={<Informasi />} />
                            <Route path="pesertakpm" element={<PesertaKPM />} />
                            <Route path="ikutkpm" element={<IkutKPM />} />
+                           <Route path="nilai" element={<Nilai />} />
                            <Route path="konfigurasisistem">
                               <Route path="periode" element={<KonfigurasiSistemPeriode />} />
                               <Route path="jadwalpendaftaran" element={<KonfigurasiSistemJadwalPendaftaran />} />

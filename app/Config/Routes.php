@@ -85,11 +85,24 @@ function adminIkutKPM($routes): void
       $routes->post('getdata', 'IkutKPM::getData');
       $routes->post('getdetailbiodata', 'IkutKPM::getDetailBiodata');
       $routes->post('downloadexcel', 'IkutKPM::downloadExcel');
+      $routes->post('hapus', 'IkutKPM::hapus');
+   });
+}
+
+function adminNilai($routes): void
+{
+   $routes->group('nilai', function ($routes) {
+      $routes->get('/', 'Nilai::index');
+      $routes->get('initpage', 'Nilai::initPage');
+
+      $routes->post('downloadexcel', 'Nilai::downloadExcel');
+      $routes->post('submit', 'Nilai::submit');
    });
 }
 
 $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function ($routes) {
    adminIkutKPM($routes);
+   adminNilai($routes);
 
    $routes->group('dashboard', function ($routes) {
       $routes->get('/', 'Dashboard::index');

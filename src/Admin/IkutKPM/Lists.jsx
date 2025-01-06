@@ -82,6 +82,7 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
                { data: "angkatan", class: "text-center" },
                { data: "nama_prodi" },
                { data: "nama_fakultas" },
+               { data: "nilai", class: "text-center" },
                {
                   data: null,
                   orederable: false,
@@ -124,10 +125,10 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
       e.preventDefault();
 
       const formData = {
-         periode: filter.periode,
-         id_fakultas: filter.id_fakultas,
-         id_prodi: filter.id_prodi,
-         id_jenis_kpm: filter.id_jenis_kpm,
+         periode: filter.periode ?? "",
+         id_fakultas: filter.id_fakultas ?? "",
+         id_prodi: filter.id_prodi ?? "",
+         id_jenis_kpm: filter.id_jenis_kpm ?? "",
       };
 
       setIsLoading(true);
@@ -236,11 +237,12 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
                         <th>angkatan</th>
                         <th>prodi</th>
                         <th>fakultas</th>
+                        <th>nilai</th>
                         <th />
                         <th />
                      </tr>
                   </thead>
-                  <tbody className="text-gray-600 fw-semibold"></tbody>
+                  <tbody className="text-gray-600 fw-semibold" />
                </Table>
             </Card.Body>
          </Card>

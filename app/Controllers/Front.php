@@ -6,6 +6,7 @@ class Front extends BaseController
 {
 
    protected $env = 'production';
+   public $data;
 
    public function template($content = [])
    {

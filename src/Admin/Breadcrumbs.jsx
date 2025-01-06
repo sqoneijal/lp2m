@@ -1,4 +1,5 @@
 import React from "react";
+import { Each } from "Root/Each";
 
 const ButtonsDashed = React.lazy(() => import("Root/ButtonsDashed"));
 
@@ -13,9 +14,10 @@ const Breadcrumbs = ({ position = [], button = {} }) => {
                if (position.length > 0) {
                   return (
                      <ul className="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-1">
-                        {position.map((data, index) => {
-                           return (
-                              <React.Fragment key={index}>
+                        <Each
+                           of={position}
+                           render={(data, index) => (
+                              <React.Fragment>
                                  <li className="breadcrumb-item text-muted text-hover-primary">{data}</li>
                                  {(() => {
                                     if (index + 1 !== position.length) {
@@ -27,8 +29,8 @@ const Breadcrumbs = ({ position = [], button = {} }) => {
                                     }
                                  })()}
                               </React.Fragment>
-                           );
-                        })}
+                           )}
+                        />
                      </ul>
                   );
                }

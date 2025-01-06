@@ -3,9 +3,26 @@
 namespace App\Models\Admin;
 
 use App\Models\Common;
+use CodeIgniter\Database\RawSql;
 
 class IkutKPM extends Common
 {
+
+   public function hapus(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_peserta_kpm');
+         $table->where('id', $post['id']);
+         $table->update([
+            'boleh_ikut_kpm' => 'f',
+            'user_modified' => $post['user_modified'],
+            'modified' => new RawSql('now()')
+         ]);
+         return ['status' => true, 'msg_response' => 'Data berhasil dihapus.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
 
    public function downloadExcel($post = [])
    {
@@ -141,7 +158,7 @@ class IkutKPM extends Common
    private function _queryData($post = [])
    {
       $table = $this->db->table('tb_peserta_kpm tpk');
-      $table->select('tpk.id, tpk.nim, tm.nama, tpk.ipk, tm.ta_masuk as angkatan, concat(tsj.nama_jenjangprodi, \' \', tmp.nama_prodi) as nama_prodi, tmf.nama_fakultas, tpk.tahun_ajaran, tpk.id_semester, tmjk.nama as nama_jenis_kpm, tpk.total_sks, tpk.krs_aktif');
+      $table->select('tpk.id, tpk.nim, tm.nama, tpk.ipk, tm.ta_masuk as angkatan, concat(tsj.nama_jenjangprodi, \' \', tmp.nama_prodi) as nama_prodi, tmf.nama_fakultas, tpk.tahun_ajaran, tpk.id_semester, tmjk.nama as nama_jenis_kpm, tpk.total_sks, tpk.krs_aktif, tpk.nilai');
       $table->join('tbl_mahasiswa tm', 'tm.nim = tpk.nim');
       $table->join('tbl_mst_prodi tmp', 'tmp.id_prodi = tm.id_prodi');
       $table->join('tbl_sys_jenjangprodi tsj', 'tsj.id_jenjangprodi = tmp.kode_jenjang');
@@ -177,7 +194,7 @@ class IkutKPM extends Common
          $i++;
       }
 
-      $column_order = ['nim', 'nama', 'nama_jenis_kpm', 'total_sks', 'ipk', 'angkatan', 'nama_prodi', 'nama_fakultas', null];
+      $column_order = ['nim', 'nama', 'nama_jenis_kpm', 'total_sks', 'ipk', 'angkatan', 'nama_prodi', 'nama_fakultas', 'nilai', null];
       $column = @$_POST['order'][0]['column'];
       $dir = @$_POST['order'][0]['dir'];
       $table->orderBy($column_order[$column], $dir);
