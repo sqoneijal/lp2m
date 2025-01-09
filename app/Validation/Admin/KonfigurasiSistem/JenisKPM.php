@@ -2,9 +2,11 @@
 
 namespace App\Validation\Admin\KonfigurasiSistem;
 
-class JenisKPM {
+class JenisKPM
+{
 
-   public function hapus() {
+   public function hapus()
+   {
       return [
          'id' => [
             'rules' => 'required|numeric|is_not_unique[tb_mst_jenis_kpm.id,id]',
@@ -13,7 +15,8 @@ class JenisKPM {
       ];
    }
 
-   public function submit($post = []) {
+   public function submit($post = [])
+   {
       return [
          'id' => [
             'rules' => ($post['pageType'] === 'insert' ? 'permit_empty' : 'required|numeric|is_not_unique[tb_mst_jenis_kpm.id,id]'),
@@ -27,7 +30,10 @@ class JenisKPM {
             'rules' => 'required|numeric|greater_than[0]',
             'label' => 'Minimal SKS lulus'
          ],
+         'kode' => [
+            'rules' => 'required',
+            'label' => 'Kode'
+         ],
       ];
    }
-   
 }

@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from "react";
 import { Card, Table } from "react-bootstrap";
-import { initDatatable, notification, confirmDelete } from "Root/Helpers";
+import { confirmDelete, initDatatable, notification } from "Root/Helpers";
 
 const Breadcrumbs = React.lazy(() => import("Admin/Breadcrumbs"));
 
@@ -13,7 +13,7 @@ const Lists = ({ setOpenForms, setDetailContent, setPageType }) => {
          show_edit_button: true,
          show_delete_button: true,
          url: datatable_url,
-         columns: [{ data: "nama" }, { data: "sks_lulus", class: "text-center" }, { data: null }],
+         columns: [{ data: "nama" }, { data: "sks_lulus", class: "text-center" }, { data: "kode" }, { data: null }],
          columnDefs: true,
          createdRow: (row, data) => {
             const _edit = row.querySelector("#edit");
@@ -72,6 +72,7 @@ const Lists = ({ setOpenForms, setDetailContent, setPageType }) => {
                      <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                         <th>jenis kpm</th>
                         <th>minimal sks lulus</th>
+                        <th>kode</th>
                         <th />
                      </tr>
                   </thead>

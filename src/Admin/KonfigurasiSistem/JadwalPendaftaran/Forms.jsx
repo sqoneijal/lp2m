@@ -1,6 +1,6 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Card, Col, Form, Row } from "react-bootstrap";
-import { post, notification, error_code_http, periode, is_invalid, msg_response } from "Root/Helpers";
+import { error_code_http, is_invalid, msg_response, notification, periode, post } from "Root/Helpers";
 
 const Breadcrumbs = React.lazy(() => import("Admin/Breadcrumbs"));
 const Buttons = React.lazy(() => import("Root/Buttons"));
@@ -19,6 +19,7 @@ const Forms = ({ pageType, setPageType, setOpenForms, periodeAktif, isLoadingDro
    const [tanggal_mulai, setTanggal_mulai] = useState("");
    const [tanggal_selesai, setTanggal_selesai] = useState("");
    const [id_jenis_kpm, setId_jenis_kpm] = useState("");
+   const [keterangan, setKeterangan] = useState("");
 
    useEffect(() => {
       if (Object.keys(detailContent).length > 0 && pageType === "update") {
@@ -28,6 +29,7 @@ const Forms = ({ pageType, setPageType, setOpenForms, periodeAktif, isLoadingDro
          setTanggal_mulai(detailContent.tanggal_mulai);
          setTanggal_selesai(detailContent.tanggal_selesai);
          setId_jenis_kpm(detailContent.id_jenis_kpm);
+         setKeterangan(detailContent.keterangan);
       }
       return () => {};
    }, [detailContent, pageType]);
@@ -49,13 +51,14 @@ const Forms = ({ pageType, setPageType, setOpenForms, periodeAktif, isLoadingDro
    const submit = (e) => {
       e.preventDefault();
       const formData = {
-         pageType: pageType,
-         id: id,
-         tahun_ajaran: tahun_ajaran,
-         id_semester: id_semester,
-         tanggal_mulai: tanggal_mulai,
-         tanggal_selesai: tanggal_selesai,
-         id_jenis_kpm: id_jenis_kpm,
+         pageType,
+         id,
+         tahun_ajaran,
+         id_semester,
+         tanggal_mulai,
+         tanggal_selesai,
+         id_jenis_kpm,
+         keterangan,
       };
 
       setIsSubmit(true);
@@ -150,6 +153,19 @@ const Forms = ({ pageType, setPageType, setOpenForms, periodeAktif, isLoadingDro
                            </Form.Control>
                            <Form.Label className="required">Jenis KPM</Form.Label>
                            {msg_response(errors.id_jenis_kpm)}
+                        </div>
+                     </Col>
+                  </Row>
+                  <Row className="mb-3">
+                     <Col md={12}>
+                        <div className="form-floating">
+                           <Form.Control
+                              as="textarea"
+                              value={keterangan}
+                              onChange={(e) => setKeterangan(e.target.value)}
+                              rows={10}
+                              style={{ height: 100 }}
+                           />
                         </div>
                      </Col>
                   </Row>

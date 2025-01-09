@@ -50,7 +50,7 @@ const Context = () => {
             }
 
             const content_download = [];
-            data.map((row, key) => {
+            data.map((row) => {
                content_download.push([
                   { value: row.nomor_peserta, type: String },
                   { value: row.nim, type: String },
@@ -58,10 +58,24 @@ const Context = () => {
                   { value: row.ipk, type: String },
                   { value: row.nama_fakultas, type: String },
                   { value: row.nama_prodi, type: String },
+                  { value: row.jenis_kpm, type: String },
+                  { value: row.nilai, type: String },
                ]);
             });
 
-            const array_header = ["NOMOR PESERTA", "NIM", "NAMA", "IPK", "FAKULTAS", "PRODI", "NILAI"];
+            const array_header = [
+               "NOMOR PESERTA",
+               "NIM",
+               "NAMA",
+               "IPK",
+               "FAKULTAS",
+               "PRODI",
+               "JENIS KPM",
+               "NILAI",
+               "NOMOR SERTIFIKAT",
+               "TANGGAL SERTIFIKAT",
+               "KETERANGAN/LOKASI",
+            ];
 
             const HEADER_ROW = [];
             array_header.forEach((row) => {
