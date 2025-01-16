@@ -1,3 +1,4 @@
+import moment from "moment/moment";
 import React, { useLayoutEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import readXlsxFile from "read-excel-file";
@@ -124,11 +125,14 @@ const Context = () => {
                         rows.forEach((row) => {
                            data.push({
                               checked: false,
-                              nomor_peserta: row[0],
+                              // nomor_peserta: row[0],
                               nim: row[1],
                               nama: row[2],
                               ipk: row[3],
-                              nilai: row[6],
+                              nilai: row[7],
+                              nomor_sertifikat: row[8],
+                              tanggal_sertifikat: moment(row[9]).format("YYYY-MM-DD"),
+                              keterangan: row[10],
                            });
                         });
 

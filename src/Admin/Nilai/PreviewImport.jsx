@@ -33,11 +33,14 @@ const PreviewImport = ({ state, setState }) => {
          <Table id="datatable" className="align-middle table-row-dashed fs-6">
             <thead>
                <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                  <th>nomor peserta</th>
+                  {/* <th>nomor peserta</th> */}
                   <th>nim</th>
                   <th>nama</th>
                   <th className="text-center">ipk</th>
                   <th className="text-center">nilai</th>
+                  <th>nomor sertifikat</th>
+                  <th>tanggal sertifikat</th>
+                  <th>keterangan/lokasi</th>
                </tr>
             </thead>
             <tbody className="text-gray-600 fw-semibold">
@@ -45,11 +48,14 @@ const PreviewImport = ({ state, setState }) => {
                   of={state.daftarMahasiswa}
                   render={(row) => (
                      <tr>
-                        <td>{row.nomor_peserta}</td>
+                        {/* <td>{row.nomor_peserta}</td> */}
                         <td>{row.nim}</td>
                         <td>{row.nama}</td>
                         <td className="text-center">{row.ipk}</td>
                         <td className="text-center">{row.nilai}</td>
+                        <td>{row.nomor_sertifikat}</td>
+                        <td>{row.tanggal_sertifikat}</td>
+                        <td>{row.keterangan}</td>
                      </tr>
                   )}
                />

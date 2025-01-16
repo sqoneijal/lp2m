@@ -85,6 +85,12 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
                { data: "nilai", class: "text-center" },
                {
                   data: null,
+                  render: (data) => {
+                     return `<a href={"https://mael.ar-raniry.ad.id/sertifikat/kpm/${data.nomor_sertifikat}"} target="_blank>${data.nomor_sertifikat}</a>`;
+                  },
+               },
+               {
+                  data: null,
                   orederable: false,
                   render: (data) => {
                      return `<a href="https://drive.google.com/file/d/${data.krs_aktif}/view?usp=drive_link" target="_blank">krs</a>`;
@@ -238,6 +244,7 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
                         <th>prodi</th>
                         <th>fakultas</th>
                         <th>nilai</th>
+                        <th>sertifikat</th>
                         <th />
                         <th />
                      </tr>

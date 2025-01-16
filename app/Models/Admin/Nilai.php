@@ -17,7 +17,10 @@ class Nilai extends Common
             foreach ($daftar as $row) {
                array_push($data, [
                   'nim' => $row['nim'],
-                  'nilai' => $row['nilai']
+                  'nilai' => $row['nilai'],
+                  'tanggal_sertifikat' => $row['tanggal_sertifikat'],
+                  'nomor_sertifikat' => $row['nomor_sertifikat'],
+                  'keterangan' => $row['keterangan'],
                ]);
             }
 

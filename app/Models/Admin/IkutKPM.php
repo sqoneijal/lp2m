@@ -158,7 +158,7 @@ class IkutKPM extends Common
    private function _queryData($post = [])
    {
       $table = $this->db->table('tb_peserta_kpm tpk');
-      $table->select('tpk.id, tpk.nim, tm.nama, tpk.ipk, tm.ta_masuk as angkatan, concat(tsj.nama_jenjangprodi, \' \', tmp.nama_prodi) as nama_prodi, tmf.nama_fakultas, tpk.tahun_ajaran, tpk.id_semester, tmjk.nama as nama_jenis_kpm, tpk.total_sks, tpk.krs_aktif, tpk.nilai');
+      $table->select('tpk.id, tpk.nim, tm.nama, tpk.ipk, tm.ta_masuk as angkatan, concat(tsj.nama_jenjangprodi, \' \', tmp.nama_prodi) as nama_prodi, tmf.nama_fakultas, tpk.tahun_ajaran, tpk.id_semester, tmjk.nama as nama_jenis_kpm, tpk.total_sks, tpk.krs_aktif, tpk.nilai, tpk.nomor_sertifikat');
       $table->join('tbl_mahasiswa tm', 'tm.nim = tpk.nim');
       $table->join('tbl_mst_prodi tmp', 'tmp.id_prodi = tm.id_prodi');
       $table->join('tbl_sys_jenjangprodi tsj', 'tsj.id_jenjangprodi = tmp.kode_jenjang');
@@ -177,7 +177,7 @@ class IkutKPM extends Common
       }
 
       $i = 0;
-      $column_search = ['tpk.nim', 'tm.nama', 'tmp.nama_prodi', 'tmf.nama_fakultas', 'tmjk.nama'];
+      $column_search = ['tpk.nim', 'tm.nama', 'tmp.nama_prodi', 'tmf.nama_fakultas', 'tmjk.nama', 'tpk.nomor_sertifikat'];
       foreach ($column_search as $item) {
          if (@$_POST['search']['value']) {
             if ($i === 0) {
@@ -194,7 +194,7 @@ class IkutKPM extends Common
          $i++;
       }
 
-      $column_order = ['nim', 'nama', 'nama_jenis_kpm', 'total_sks', 'ipk', 'angkatan', 'nama_prodi', 'nama_fakultas', 'nilai', null];
+      $column_order = ['nim', 'nama', 'nama_jenis_kpm', 'total_sks', 'ipk', 'angkatan', 'nama_prodi', 'nama_fakultas', 'nilai', 'nomor_sertifikat', null];
       $column = @$_POST['order'][0]['column'];
       $dir = @$_POST['order'][0]['dir'];
       $table->orderBy($column_order[$column], $dir);
