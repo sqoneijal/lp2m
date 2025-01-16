@@ -11,9 +11,9 @@ class Nilai extends Common
    {
       try {
          $daftar = json_decode($post['daftar'], true);
+         $data = [];
 
          if (!empty($daftar)) {
-            $data = [];
             foreach ($daftar as $row) {
                array_push($data, [
                   'nim' => $row['nim'],
@@ -23,13 +23,13 @@ class Nilai extends Common
                   'keterangan' => $row['keterangan'],
                ]);
             }
-
-            if (!empty($data)) {
-               $table = $this->db->table('tb_peserta_kpm');
-               $table->updateBatch($data, 'nim');
-            }
          }
-         return ['status' => true, 'msg_response' => 'Data berhasil diimport.'];
+
+         if (!empty($data)) {
+            $table = $this->db->table('tb_peserta_kpm');
+            $table->updateBatch($data, 'nim');
+         }
+         return ['status' => true, 'msg_response' => 'Data berhasil diimport.', 'content' => $data];
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }

@@ -86,7 +86,7 @@ const Lists = ({ setDetailContent, isLoadingDropdownList, daftarJenisKPM, daftar
                {
                   data: null,
                   render: (data) => {
-                     return `<a href={"https://mael.ar-raniry.ad.id/sertifikat/kpm/${data.nomor_sertifikat}"} target="_blank>${data.nomor_sertifikat}</a>`;
+                     return `<a href="https://mael.ar-raniry.ac.id/sertifikat/kpm/${data.nim}" target="_blank">${data.nomor_sertifikat}</a>`;
                   },
                },
                {
