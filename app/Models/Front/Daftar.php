@@ -95,6 +95,19 @@ class Daftar extends Model
 
    public function cariMahasiswa($post = [])
    {
+      $curl = service('curlrequest', [
+         'baseURI' => env('SEVIMA_PATH_URL'),
+         'headers' => [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'X-App-Key' => env('SEVIMA_APP_KEY'),
+            'X-Secret-Key' => env('SEVIMA_APP_SECRET')
+         ]
+      ]);
+
+
+
+      return [];
       try {
          $table = $this->db->table('tbl_mahasiswa tm');
          $table->select('tm.nim, tm.nama, tm.tpt_lahir, tm.tgl_lahir, tm.jk,
