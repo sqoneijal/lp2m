@@ -5,4 +5,4 @@ vendor
 writable
 public/bundle
 sites.xml
-.env
+.env.env
