@@ -3,6 +3,7 @@
 namespace App\Models\Front;
 
 use CodeIgniter\Model;
+use App\Libraries\Sevima;
 
 class Daftar extends Model
 {
@@ -93,22 +94,52 @@ class Daftar extends Model
       }
    }
 
-   public function cariMahasiswa($post = [])
+   public function cariMahasiswa($post = []): array
    {
-      $curl = service('curlrequest', [
-         'baseURI' => env('SEVIMA_PATH_URL'),
-         'headers' => [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-            'X-App-Key' => env('SEVIMA_APP_KEY'),
-            'X-Secret-Key' => env('SEVIMA_APP_SECRET')
-         ]
-      ]);
+      $sevima = new Sevima();
+      $biodataMahasiswa = $sevima->getBiodataMahasiswa($post['nim']);
+      $krsPeriodeAktif = $sevima->getKRSMahasiswa($post['nim'], 'f-id_periode=' . $post['tahun_ajaran'] . '' . $post['id_semester']);
+      $transkrip = $sevima->getTranskripMahasiswa($post['nim']);
 
+      $sudah_isi_krs = false;
+      if (count($krsPeriodeAktif)) {
+         foreach ($krsPeriodeAktif as $row) {
+            if ($row['is_krs_disetujui'] === '1') {
+               $sudah_isi_krs = true;
+            }
+         }
+      }
 
+      if (!empty($biodataMahasiswa) && $sudah_isi_krs) {
+         $total_bobot = 0;
+         $total_sks = 0;
+         foreach ($transkrip as $row) {
+            $total_bobot += floatval($row['bobot_mata_kuliah']);
+            $total_sks += floatval($row['sks_mata_kuliah']);
+         }
 
+         return [
+            'nim' => $biodataMahasiswa['nim'],
+            'nama' => $biodataMahasiswa['nama'],
+            'tpt_lahir' => $biodataMahasiswa['tempat_lahir'],
+            'tgl_lahir' => $biodataMahasiswa['tanggal_lahir'],
+            'jk' => $biodataMahasiswa['jenis_kelamin'],
+            'ipk' => round($total_bobot / $total_sks, 2),
+            'total_sks' => $total_sks,
+            'telp' => $biodataMahasiswa['hp'],
+            'email' => $biodataMahasiswa['email'],
+            'alamat' => $biodataMahasiswa['alamat'],
+         ];
+      }
       return [];
-      try {
+
+
+
+
+
+
+
+      /* try {
          $table = $this->db->table('tbl_mahasiswa tm');
          $table->select('tm.nim, tm.nama, tm.tpt_lahir, tm.tgl_lahir, tm.jk,
          round((tk2.total_bobot + coalesce(tkk.total_bobot_konversi, 0)) / (tk2.total_sks + coalesce(tkk.total_sks_konversi, 0)), 2) as ipk,
@@ -153,6 +184,6 @@ class Daftar extends Model
          return $response;
       } catch (\Exception $e) {
          die($e->getMessage());
-      }
+      } */
    }
 }

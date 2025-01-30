@@ -1,6 +1,6 @@
-import React, { Suspense, useEffect, useState } from "react";
-import { Row, Col, Container } from "react-bootstrap";
-import { get, notification, error_code_http } from "Root/Helpers";
+import React, { Suspense, useLayoutEffect, useState } from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import { error_code_http, get, notification } from "Root/Helpers";
 
 const Forms = React.lazy(() => import("./Forms"));
 const InformasiSyarat = React.lazy(() => import("./InformasiSyarat"));
@@ -38,28 +38,26 @@ const Context = () => {
          });
    };
 
-   useEffect(() => {
+   useLayoutEffect(() => {
       getDropdownList();
       return () => {};
    }, []);
 
    return (
-      <React.Fragment>
-         <Container fluid={true} className="mb-20">
-            <Row>
-               <Col md={7} xs={12} className="mb-20">
-                  <Suspense fallback={<div>Loading...</div>}>
-                     <Forms {...propsForms} />
-                  </Suspense>
-               </Col>
-               <Col md={5} xs={12} className="mb-20">
-                  <Suspense fallback={<div>Loading...</div>}>
-                     <InformasiSyarat {...propsInformasiSyarat} />
-                  </Suspense>
-               </Col>
-            </Row>
-         </Container>
-      </React.Fragment>
+      <Container fluid={true} className="mb-20">
+         <Row>
+            <Col md={7} xs={12} className="mb-20">
+               <Suspense fallback={<div>Loading...</div>}>
+                  <Forms {...propsForms} />
+               </Suspense>
+            </Col>
+            <Col md={5} xs={12} className="mb-20">
+               <Suspense fallback={<div>Loading...</div>}>
+                  <InformasiSyarat {...propsInformasiSyarat} />
+               </Suspense>
+            </Col>
+         </Row>
+      </Container>
    );
 };
 export default Context;

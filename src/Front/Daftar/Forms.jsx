@@ -60,20 +60,16 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
    const [ipk, setIpk] = useState("");
    const [total_sks, setTotal_sks] = useState("");
 
-   useEffect(() => {
-      if (id_jenis_kpm && jadwalPendaftaran.length > 0) {
+   const getStatusOpenJadwalPendaftaran = (id_jenis_kpm, jadwalPendaftaran) => {
+      let status = false;
+      jadwalPendaftaran.length > 0 &&
          jadwalPendaftaran.map((data) => {
             if (data.id_jenis_kpm === id_jenis_kpm && data.is_open) {
-               setDisableInput(false);
-               setShowSubmitButton(true);
+               status = true;
             }
          });
-      } else {
-         setDisableInput(true);
-         setShowSubmitButton(false);
-      }
-      return () => {};
-   }, [id_jenis_kpm, jadwalPendaftaran]);
+      return status;
+   };
 
    const clearProps = () => {
       setFoto("");
@@ -156,6 +152,8 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
          .then((res) => {
             const { data } = res;
             if (Object.keys(data).length > 0) {
+               setShowSubmitButton(getStatusOpenJadwalPendaftaran(id_jenis_kpm, jadwalPendaftaran));
+
                setNim(data.nim);
                setNama(data.nama);
                setTpt_lahir(data.tpt_lahir);
@@ -165,7 +163,6 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                setTotal_sks(data.total_sks);
                setOld_foto(data.foto);
                setNomor_peserta(data.nomor_peserta);
-               setId_jenis_kpm(data.id_jenis_kpm);
                setStatus_perkawinan(data.status_perkawinan);
                setTelp(data.telp);
                setEmail(data.email);
@@ -204,13 +201,6 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
       }
       return () => {};
    }, [isLoadingCariMahasiswa]);
-
-   useEffect(() => {
-      if (nim.length >= 9) {
-         cariMahasiswa(nim);
-      }
-      return () => {};
-   }, [nim]);
 
    return (
       <div className="mb-n10 mb-lg-n20 z-index-2">
@@ -286,7 +276,7 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                                        setFoto(e.target.files[0]);
                                     }}
                                     isInvalid={is_invalid(errors.foto)}
-                                    disabled={disableInput}
+                                    disabled={!id_jenis_kpm}
                                  />
                                  <Form.Label>Foto dengan latar merah</Form.Label>
                                  {msg_response(errors.foto)}
@@ -301,7 +291,7 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                                        setKrs_aktif(e.target.files[0]);
                                     }}
                                     isInvalid={is_invalid(errors.krs_aktif)}
-                                    disabled={disableInput}
+                                    disabled={!id_jenis_kpm}
                                  />
                                  <Form.Label>KRS Aktif</Form.Label>
                                  {msg_response(errors.krs_aktif)}
@@ -316,9 +306,12 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                            <Form.Control
                               placeholder="NIM"
                               value={nim}
-                              onChange={(e) => setNim(e.target.value)}
+                              onChange={(e) => {
+                                 if (e.target.value.length >= 9) cariMahasiswa(e.target.value);
+                                 setNim(e.target.value);
+                              }}
                               isInvalid={is_invalid(errors.nim)}
-                              disabled={disableInput}
+                              disabled={!id_jenis_kpm}
                            />
                            <Form.Label className="required">NIM</Form.Label>
                            {msg_response(errors.nim)}
@@ -360,7 +353,7 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                               value={status_perkawinan}
                               onChange={(e) => setStatus_perkawinan(e.target.value)}
                               isInvalid={is_invalid(errors.status_perkawinan)}
-                              disabled={disableInput}>
+                              disabled={!id_jenis_kpm}>
                               <option value="">--pilih--</option>
                               {daftarStatusPerkawinan.map((data, index) => {
                                  return (
@@ -381,7 +374,7 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                               value={telp}
                               onChange={(e) => setTelp(e.target.value)}
                               isInvalid={is_invalid(errors.telp)}
-                              disabled={disableInput}
+                              disabled={!id_jenis_kpm}
                            />
                            <Form.Label className="required">Telepon / HP</Form.Label>
                            {msg_response(errors.telp)}
@@ -394,7 +387,7 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               isInvalid={is_invalid(errors.email)}
-                              disabled={disableInput}
+                              disabled={!id_jenis_kpm}
                            />
                            <Form.Label className="required">Email Aktif</Form.Label>
                            {msg_response(errors.email)}
@@ -408,7 +401,7 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                               placeholder="Penyakit yang sering dialami"
                               value={penyakit}
                               onChange={(e) => setPenyakit(e.target.value)}
-                              disabled={disableInput}
+                              disabled={!id_jenis_kpm}
                            />
                            <Form.Label>Penyakit yang sering dialami</Form.Label>
                         </div>
@@ -422,7 +415,7 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                               value={alamat}
                               onChange={(e) => setAlamat(e.target.value)}
                               isInvalid={is_invalid(errors.alamat)}
-                              disabled={disableInput}
+                              disabled={!id_jenis_kpm}
                            />
                            <Form.Label className="required">Alamat tinggal di Banda Aceh</Form.Label>
                            {msg_response(errors.alamat)}
@@ -436,7 +429,7 @@ const Forms = ({ isLoadingDropdownList, periodeAktif, jenisKPM, jadwalPendaftara
                               placeholder="Organisasi"
                               value={organisasi}
                               onChange={(e) => setOrganisasi(e.target.value)}
-                              disabled={disableInput}
+                              disabled={!id_jenis_kpm}
                            />
                            <Form.Label>Organisasi</Form.Label>
                         </div>

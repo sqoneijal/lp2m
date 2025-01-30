@@ -5,7 +5,7 @@ namespace App\Controllers;
 class Front extends BaseController
 {
 
-   protected $env = 'production';
+   protected $env = 'development';
    public $data;
 
    public function template($content = [])
